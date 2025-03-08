@@ -4,13 +4,28 @@
             document.getElementById('custom-popup').remove();
             return;
         }
-        let p=document.createElement('div');
-        p.id='custom-popup';
-        p.style="position:fixed;top:20px;right:20px;width:220px;background:white;border:2px solid black;box-shadow:2px 2px 10px rgba(0,0,0,0.3);padding:10px;z-index:9999;font-family:Arial,sans-serif;border-radius:8px;text-align:center;";
-        let t=document.createElement('div');
-        t.textContent='Amazon PPC Metrics';
-        t.style="font-weight:bold;margin-bottom:10px;";
+
+        let p = document.createElement('div');
+        p.id = 'custom-popup';
+        p.style = "position:fixed;top:20px;right:20px;width:250px;background:white;border:2px solid black;box-shadow:2px 2px 10px rgba(0,0,0,0.3);padding:10px;z-index:9999;font-family:Arial,sans-serif;border-radius:8px;text-align:center;";
+
+        let t = document.createElement('div');
+        t.textContent = 'Amazon PPC Metrics';
+        t.style = "font-weight:bold;margin-bottom:10px;";
         p.appendChild(t);
+
+        // Create Campaign Filters dropdown
+        let dropdownHeader = document.createElement('div');
+        dropdownHeader.textContent = 'Campaign Filters ▼';
+        dropdownHeader.style = "background:#007bff;color:white;padding:8px;margin:5px;border-radius:5px;cursor:pointer;";
+        dropdownHeader.onclick = function() {
+            filtersContainer.style.display = filtersContainer.style.display === 'none' ? 'block' : 'none';
+            dropdownHeader.textContent = filtersContainer.style.display === 'none' ? 'Campaign Filters ▼' : 'Campaign Filters ▲';
+        };
+        p.appendChild(dropdownHeader);
+
+        let filtersContainer = document.createElement('div');
+        filtersContainer.style = "display:none;margin-top:5px;";
 
         function ensureFilterFormOpen(callback) {
             let filterToggleButton = document.querySelector('.js-toggle-filter');
@@ -35,15 +50,15 @@
 
         function getPPC_CVR(){
             try{
-                let w=document.querySelector('.widget-wrapper.show.selected.widget-custom_range');
-                if(!w)throw'PPC Widget not found';
-                let l=Array.from(w.querySelectorAll('.label-wrapper .section-label span')).find(s=>s.textContent.trim()==='PPC CVR');
-                if(!l)throw'PPC CVR label not found';
-                let v=l.closest('.label-wrapper').parentElement.querySelector('.value-main');
-                if(!v)throw'PPC CVR value not found';
+                let w = document.querySelector('.widget-wrapper.show.selected.widget-custom_range');
+                if(!w) throw 'PPC Widget not found';
+                let l = Array.from(w.querySelectorAll('.label-wrapper .section-label span')).find(s => s.textContent.trim() === 'PPC CVR');
+                if(!l) throw 'PPC CVR label not found';
+                let v = l.closest('.label-wrapper').parentElement.querySelector('.value-main');
+                if(!v) throw 'PPC CVR value not found';
                 return parseFloat(v.textContent.trim().replace('%',''));
             } catch(e){
-                alert('Error retrieving PPC CVR: '+e);
+                alert('Error retrieving PPC CVR: ' + e);
                 return null;
             }
         }
@@ -51,9 +66,9 @@
         function setCvrMaxValue(){
             ensureFilterFormOpen(() => {
                 clearAllInputs();
-                let v=getPPC_CVR();
-                if(v!==null){
-                    let i=document.querySelector('input[name="cvr[max]"]');
+                let v = getPPC_CVR();
+                if(v !== null){
+                    let i = document.querySelector('input[name="cvr[max]"]');
                     if (i) {
                         i.value = v;
                         console.log('Set CVR Max:', v);
@@ -69,7 +84,7 @@
             ensureFilterFormOpen(() => {
                 clearAllInputs();
                 try {
-                    let i=document.querySelector('input[name="acos[max]"]');
+                    let i = document.querySelector('input[name="acos[max]"]');
                     if (i) {
                         i.value = 15;
                         console.log('Set ACoS Max: 15');
@@ -78,7 +93,7 @@
                         alert('ACoS Max input field not found');
                     }
                 } catch(e) {
-                    alert('Error setting ACoS Max: '+e);
+                    alert('Error setting ACoS Max: ' + e);
                 }
             });
         }
@@ -121,12 +136,12 @@
             }
         }
 
-        function b(t,c){
-            let btn=document.createElement('button');
-            btn.textContent=t;
-            btn.style="display:block;margin:5px auto;padding:8px;width:90%;border:none;background:#007bff;color:white;border-radius:5px;cursor:pointer;";
-            btn.onclick=c;
-            p.appendChild(btn);
+        function b(t, c){
+            let btn = document.createElement('button');
+            btn.textContent = t;
+            btn.style = "display:block;margin:5px auto;padding:8px;width:90%;border:none;background:#007bff;color:white;border-radius:5px;cursor:pointer;";
+            btn.onclick = c;
+            filtersContainer.appendChild(btn);
         }
 
         b('Toggle Filter Form', toggleFilterForm);
@@ -136,14 +151,16 @@
         b('30 Day - Low ACoS < 15%', setAcosMaxValue);
         b('Apply Filters', clickFilterButton);
 
-        let c=document.createElement('button');
-        c.textContent='Close';
-        c.style="margin-top:10px;padding:5px;background:red;color:white;border:none;border-radius:5px;cursor:pointer;";
-        c.onclick=()=>p.remove();
+        p.appendChild(filtersContainer);
+
+        let c = document.createElement('button');
+        c.textContent = 'Close';
+        c.style = "margin-top:10px;padding:5px;background:red;color:white;border:none;border-radius:5px;cursor:pointer;";
+        c.onclick = () => p.remove();
         p.appendChild(c);
 
         document.body.appendChild(p);
     } catch(e) {
-        alert('Error initializing bookmarklet: '+e);
+        alert('Error initializing bookmarklet: ' + e);
     }
 })();
