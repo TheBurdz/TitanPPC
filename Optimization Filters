@@ -1,0 +1,156 @@
+function doGet(e) {
+    var output = ContentService.createTextOutput();
+    output.setMimeType(ContentService.MimeType.JAVASCRIPT);
+    output.setContent(`
+        (function(){
+            try {
+                if(document.getElementById('custom-popup')) {
+                    document.getElementById('custom-popup').remove();
+                    return;
+                }
+                let p=document.createElement('div');
+                p.id='custom-popup';
+                p.style="position:fixed;top:20px;right:20px;width:220px;background:white;border:2px solid black;box-shadow:2px 2px 10px rgba(0,0,0,0.3);padding:10px;z-index:9999;font-family:Arial,sans-serif;border-radius:8px;text-align:center;";
+                let t=document.createElement('div');
+                t.textContent='Amazon PPC Metrics';
+                t.style="font-weight:bold;margin-bottom:10px;";
+                p.appendChild(t);
+
+                function ensureFilterFormOpen(callback) {
+                    let filterToggleButton = document.querySelector('.js-toggle-filter');
+                    if (filterToggleButton && !filterToggleButton.classList.contains('active')) {
+                        console.log('Opening filter form...');
+                        filterToggleButton.click();
+                        setTimeout(callback, 1500); // Wait for form to open before proceeding
+                    } else {
+                        callback();
+                    }
+                }
+
+                function clearAllInputs() {
+                    let inputs = document.querySelectorAll('form input[type="text"], form input[type="number"], form input[type="email"], form input[type="password"]');
+                    inputs.forEach(input => input.value = '');
+                    
+                    let selects = document.querySelectorAll('form select');
+                    selects.forEach(select => select.selectedIndex = 0);
+                    
+                    console.log('Cleared all form inputs.');
+                }
+
+                function getPPC_CVR(){
+                    try{
+                        let w=document.querySelector('.widget-wrapper.show.selected.widget-custom_range');
+                        if(!w)throw'PPC Widget not found';
+                        let l=Array.from(w.querySelectorAll('.label-wrapper .section-label span')).find(s=>s.textContent.trim()==='PPC CVR');
+                        if(!l)throw'PPC CVR label not found';
+                        let v=l.closest('.label-wrapper').parentElement.querySelector('.value-main');
+                        if(!v)throw'PPC CVR value not found';
+                        return parseFloat(v.textContent.trim().replace('%',''));
+                    } catch(e){
+                        alert('Error retrieving PPC CVR: '+e);
+                        return null;
+                    }
+                }
+
+                function setCvrMaxValue(){
+                    ensureFilterFormOpen(() => {
+                        clearAllInputs();
+                        let v=getPPC_CVR();
+                        if(v!==null){
+                            let i=document.querySelector('input[name="cvr[max]"]');
+                            if (i) {
+                                i.value = v;
+                                console.log('Set CVR Max:', v);
+                                clickFilterButton();
+                            } else {
+                                alert('CVR Max input field not found');
+                            }
+                        }
+                    });
+                }
+
+                function setAcosMaxValue(){
+                    ensureFilterFormOpen(() => {
+                        clearAllInputs();
+                        try {
+                            let i=document.querySelector('input[name="acos[max]"]');
+                            if (i) {
+                                i.value = 15;
+                                console.log('Set ACoS Max: 15');
+                                clickFilterButton();
+                            } else {
+                                alert('ACoS Max input field not found');
+                            }
+                        } catch(e) {
+                            alert('Error setting ACoS Max: '+e);
+                        }
+                    });
+                }
+
+                function setAcosMinValue(){
+                    ensureFilterFormOpen(() => {
+                        clearAllInputs();
+                        try {
+                            let i=document.querySelector('input[name="acos[min]"]');
+                            if (i) {
+                                i.value = 35;
+                                console.log('Set ACoS Max: 35');
+                                clickFilterButton();
+                            } else {
+                                alert('ACoS Max input field not found');
+                            }
+                        } catch(e) {
+                            alert('Error setting ACoS Min: '+e);
+                        }
+                    });
+                }
+
+                function clickFilterButton(){
+                    let filterButton = document.querySelector('.js-table-filter-submit'); // Apply Filter button
+                    if (filterButton) {
+                        filterButton.click();
+                        console.log('Filter button clicked.');
+                    } else {
+                        alert('Filter button not found.');
+                    }
+                }
+
+                function toggleFilterForm(){
+                    let filterToggleButton = document.querySelector('.js-toggle-filter');
+                    if (filterToggleButton) {
+                        filterToggleButton.click();
+                        console.log('Toggled filter form.');
+                    } else {
+                        alert('Filter form button not found.');
+                    }
+                }
+
+                function b(t,c){
+                    let btn=document.createElement('button');
+                    btn.textContent=t;
+                    btn.style="display:block;margin:5px auto;padding:8px;width:90%;border:none;background:#007bff;color:white;border-radius:5px;cursor:pointer;";
+                    btn.onclick=c;
+                    p.appendChild(btn);
+                }
+
+                b('Toggle Filter Form', toggleFilterForm);
+                b('Clear Form', clearAllInputs);
+                b('30 Day - Low CVR', setCvrMaxValue);
+                b('30 Day - High ACoS > 35%', setAcosMinValue;
+                b('30 Day - Low ACoS < 15%', setAcosMaxValue);
+                b('Apply Filters', clickFilterButton);
+
+                let c=document.createElement('button');
+                c.textContent='Close';
+                c.style="margin-top:10px;padding:5px;background:red;color:white;border:none;border-radius:5px;cursor:pointer;";
+                c.onclick=()=>p.remove();
+                p.appendChild(c);
+
+                document.body.appendChild(p);
+            } catch(e) {
+                alert('Error initializing bookmarklet: '+e);
+            }
+        })();
+    `);
+    return output;
+}
