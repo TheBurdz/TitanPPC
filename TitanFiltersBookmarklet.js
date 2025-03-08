@@ -83,6 +83,24 @@
             });
         }
 
+        function setAcosMinValue(){
+            ensureFilterFormOpen(() => {
+                clearAllInputs();
+                try {
+                    let i=document.querySelector('input[name="acos[min]"]');
+                    if (i) {
+                        i.value = 35;
+                        console.log('Set ACoS Max: 35');
+                        clickFilterButton();
+                    } else {
+                        alert('ACoS Min input field not found');
+                    }
+                } catch(e) {
+                    alert('Error setting ACoS Min: '+e);
+                }
+            });
+        }
+
         function clickFilterButton(){
             let filterButton = document.querySelector('.js-table-filter-submit');
             if (filterButton) {
@@ -114,8 +132,8 @@
         b('Toggle Filter Form', toggleFilterForm);
         b('Clear Form', clearAllInputs);
         b('30 Day - Low CVR', setCvrMaxValue);
-        b('30 Day - ACoS > CM2', ()=>alert('Feature skipped for now.'));
-        b('30 Day - Low ACoS', setAcosMaxValue);
+        b('30 Day - High ACoS > 35%', setAcosMinValue);
+        b('30 Day - Low ACoS < 15%', setAcosMaxValue);
         b('Apply Filters', clickFilterButton);
 
         let c=document.createElement('button');
