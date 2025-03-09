@@ -8,16 +8,20 @@
         let p = document.createElement('div');
         p.id = 'custom-popup';
         p.style = "position:fixed;top:20px;right:40px;width:250px;background:white;border:2px solid black;box-shadow:2px 2px 10px rgba(0,0,0,0.3);padding:10px;z-index:9999;font-family:Arial,sans-serif;border-radius:8px;text-align:center;";
+        
+        const logo = new Image(200, 40); // width, height
+				logo.src = "https://raw.githubusercontent.com/TheBurdz/TitanPPC/refs/heads/main/titan-network-logo.svg";
+				p.appendChild(logo);
 
         let t = document.createElement('div');
         t.textContent = 'Amazon PPC Metrics';
-        t.style = "font-weight:bold;margin-bottom:10px;";
+        t.style = "font-weight:bold;margin-top:10px;margin-bottom:10px;";
         p.appendChild(t);
 
         // Create Campaign Filters dropdown
         let dropdownHeader = document.createElement('div');
         dropdownHeader.textContent = '▷ Campaign Filters';
-        dropdownHeader.style = "background:#d49700;color:white;padding:8px;margin:5px;border-radius:5px;cursor:pointer;";
+        dropdownHeader.style = "background:white;border:1px solid #DEDFE0;box-shadow:1px 1px 5px rgba(0,0,0,0.3);color:black;padding:5px;margin:5px;border-radius:5px;cursor:pointer;";
         dropdownHeader.onclick = function() {
             filtersContainer.style.display = filtersContainer.style.display === 'none' ? 'block' : 'none';
             dropdownHeader.textContent = filtersContainer.style.display === 'none' ? '▷ Campaign Filters' : '▽ Campaign Filters';
@@ -139,7 +143,7 @@
         function b(t, c){
             let btn = document.createElement('button');
             btn.textContent = t;
-            btn.style = "display:block;margin:5px auto;padding:8px;width:90%;border:none;background:#d49700;color:white;border-radius:5px;cursor:pointer;";
+            btn.style = "display:block;margin:5px auto;padding:5px;width:90%;border:none;background:#d49700;color:white;border-radius:5px;cursor:pointer;";
             btn.onclick = c;
             filtersContainer.appendChild(btn);
         }
