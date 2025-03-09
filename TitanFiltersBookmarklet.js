@@ -227,7 +227,7 @@
         b('Low ACoS < 15%', setAcosMaxValue);
         // b('Apply Filters', clickFilterButton);
         w('Use 60+ Day Lookback Period');
-        b('Clicks w/ No Sales', setClicksNoOrdersValue);
+        // b('Clicks w/ No Sales', setClicksNoOrdersValue); // need to fix code to do both actions without clicking filter button for each input
         b('High ACoS > 70%', setAcosMin70Value);
         b('Low Orders < 20', setAcosMaxOrdersValue);
 
