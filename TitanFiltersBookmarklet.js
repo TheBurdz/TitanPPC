@@ -7,14 +7,14 @@
 
         let p = document.createElement('div');
         p.id = 'custom-popup';
-        p.style = "position:fixed;top:20px;right:40px;width:250px;background:white;border:2px solid black;box-shadow:2px 2px 10px rgba(0,0,0,0.3);padding:10px;z-index:9999;font-family:Arial,sans-serif;border-radius:8px;text-align:center;";
+        p.style = "position:fixed;top:20px;right:40px;width:250px;background:white;border:1px solid black;box-shadow:2px 2px 10px rgba(0,0,0,0.3);padding:10px;z-index:9999;font-family:Arial,sans-serif;border-radius:8px;text-align:center;";
         
         const logo = new Image(200, 40); // width, height
-				logo.src = "https://raw.githubusercontent.com/TheBurdz/TitanPPC/refs/heads/main/titan-network-logo.svg";
-				p.appendChild(logo);
+	logo.src = "https://raw.githubusercontent.com/TheBurdz/TitanPPC/refs/heads/main/titan-network-logo.svg";
+	p.appendChild(logo);
 
         let t = document.createElement('div');
-        t.textContent = 'Amazon PPC Metrics';
+        t.textContent = 'Amazon PPC Filters';
         t.style = "font-weight:bold;margin-top:10px;margin-bottom:10px;";
         p.appendChild(t);
 
@@ -102,6 +102,52 @@
             });
         }
 
+	function setAcosMaxOrdersValue(){
+            ensureFilterFormOpen(() => {
+                clearAllInputs();
+                try {
+                    let i = document.querySelector('input[name="orders[max]"]');
+                    if (i) {
+                        i.value = 20;
+                        console.log('Set Orders Max: 20');
+                        clickFilterButton();
+                    } else {
+                        alert('Orders Max input field not found');
+                    }
+                } catch(e) {
+                    alert('Error setting Orders Max: ' + e);
+                }
+            });
+        }
+
+	function setClicksNoOrdersValue(){
+            ensureFilterFormOpen(() => {
+                clearAllInputs();
+                try {
+                    let i = document.querySelector('input[name="orders[max]"]');
+		    let j = document.querySelector('input[name="clicks[min]"]');
+                    if (i) {
+                        i.value = 0;
+                        console.log('Set Orders Max: 0');
+                        clickFilterButton();
+                    } else {
+                        alert('Orders Max input field not found');
+                    }
+		    if (j) {
+                        j.value = 1;
+                        console.log('Set Clicks Min: 1');
+                        clickFilterButton();
+                    } else {
+                        alert('Clicks Min input field not found');
+                    }
+		
+			
+                } catch(e) {
+                    alert('Error setting Orders Max: ' + e);
+                }
+            });
+        }
+
         function setAcosMinValue(){
             ensureFilterFormOpen(() => {
                 clearAllInputs();
@@ -109,7 +155,25 @@
                     let i=document.querySelector('input[name="acos[min]"]');
                     if (i) {
                         i.value = 35;
-                        console.log('Set ACoS Max: 35');
+                        console.log('Set ACoS Min: 35');
+                        clickFilterButton();
+                    } else {
+                        alert('ACoS Min input field not found');
+                    }
+                } catch(e) {
+                    alert('Error setting ACoS Min: '+e);
+                }
+            });
+        }
+
+	function setAcosMin70Value(){
+            ensureFilterFormOpen(() => {
+                clearAllInputs();
+                try {
+                    let i=document.querySelector('input[name="acos[min]"]');
+                    if (i) {
+                        i.value = 70;
+                        console.log('Set ACoS Min: 70');
                         clickFilterButton();
                     } else {
                         alert('ACoS Min input field not found');
@@ -147,13 +211,25 @@
             btn.onclick = c;
             filtersContainer.appendChild(btn);
         }
+        
+        function w(x){
+            let lne = document.createElement('text');
+            lne.textContent = x;
+            lne.style = "display:block;font-size:12px;margin:5px auto;padding:5px;width:90%;border:none;background:white;color:black;border-radius:5px;cursor:pointer;";
+            filtersContainer.appendChild(lne);
+        }
 
-        b('Toggle Filter Form', toggleFilterForm);
-        b('Clear Form', clearAllInputs);
-        b('30 Day - Low CVR', setCvrMaxValue);
-        b('30 Day - High ACoS > 35%', setAcosMinValue);
-        b('30 Day - Low ACoS < 15%', setAcosMaxValue);
-        b('Apply Filters', clickFilterButton);
+        w('Use 30 Day Lookback Period');
+        // b('Toggle Filter Form', toggleFilterForm);
+        // b('Clear Form', clearAllInputs);
+        b('Low CVR - Below AVG', setCvrMaxValue);
+        b('High ACoS > 35%', setAcosMinValue);
+        b('Low ACoS < 15%', setAcosMaxValue);
+        // b('Apply Filters', clickFilterButton);
+        w('Use 60+ Day Lookback Period');
+        b('Clicks w/ No Sales', setClicksNoOrdersValue);
+        b('High ACoS > 70%', setAcosMin70Value);
+        b('Low Orders < 20', setAcosMaxOrdersValue);
 
         p.appendChild(filtersContainer);
 
