@@ -120,33 +120,34 @@
             });
         }
 
+	// New Clicks No Orders Function    
 	function setClicksNoOrdersValue(){
-            ensureFilterFormOpen(() => {
-                clearAllInputs();
-                try {
-                    let i = document.querySelector('input[name="orders[max]"]');
-		    let j = document.querySelector('input[name="clicks[min]"]');
-                    if (i) {
-                        i.value = 0;
-                        console.log('Set Orders Max: 0');
-                        clickFilterButton();
-                    } else {
-                        alert('Orders Max input field not found');
-                    }
-		    if (j) {
-                        j.value = 1;
-                        console.log('Set Clicks Min: 1');
-                        clickFilterButton();
-                    } else {
-                        alert('Clicks Min input field not found');
-                    }
-		
-			
-                } catch(e) {
-                    alert('Error setting Orders Max: ' + e);
+    	ensureFilterFormOpen(() => {
+        clearAllInputs();
+        try {
+            let valuesToSet = {
+                "orders[max]": 0,  // Set Orders Max to 0
+                "clicks[min]": 1   // Set Clicks Min to 1
+            };
+
+            Object.keys(valuesToSet).forEach(fieldName => {
+                let inputField = document.querySelector(`input[name="${fieldName}"]`);
+                if (inputField) {
+                    inputField.value = valuesToSet[fieldName];
+                    console.log(`Set ${fieldName} to ${valuesToSet[fieldName]}`);
+                } else {
+                    console.warn(`Input field not found: ${fieldName}`);
                 }
             });
+
+            clickFilterButton(); // Apply filters after setting values
+
+        } catch(e) {
+            alert('Error setting multiple values: ' + e);
         }
+    	});
+	}
+
 
         function setAcosMinValue(){
             ensureFilterFormOpen(() => {
@@ -227,7 +228,7 @@
         b('Low ACoS < 15%', setAcosMaxValue);
         // b('Apply Filters', clickFilterButton);
         w('Use 60+ Day Lookback Period');
-        // b('Clicks w/ No Sales', setClicksNoOrdersValue); // need to fix code to do both actions without clicking filter button for each input
+        b('Clicks w/ No Sales', setClicksNoOrdersValue);
         b('High ACoS > 70%', setAcosMin70Value);
         b('Low Orders < 20', setAcosMaxOrdersValue);
 
