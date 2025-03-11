@@ -82,10 +82,10 @@
 				                // setTimeout(showTitanSuggestionsOverlay, 500);
                         
                         // Wait for campaigns to update, then open placements and highlight CVR
-   				             setTimeout(() => {
-          			          openAllPlacements();
-                			    setTimeout(highlightPlacementCVR, 10000);
-            				   }, 1500);
+   			setTimeout(() => {
+          			openAllPlacements();
+                		// setTimeout(highlightPlacementCVR, 10000);
+            		}, 1500);
                     } else {
                         alert('CVR Max input field not found');
                     }
