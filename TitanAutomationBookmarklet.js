@@ -79,7 +79,7 @@
                         clickFilterButton();
                         
                         // Show Overlay with Titan Suggestions
-				                setTimeout(showTitanSuggestionsOverlay, 500);
+				                // setTimeout(showTitanSuggestionsOverlay, 500);
                         
                         // Wait for campaigns to update, then open placements and highlight CVR
    				             setTimeout(() => {
