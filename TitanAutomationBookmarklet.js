@@ -84,7 +84,7 @@
                         // Wait for campaigns to update, then open placements and highlight CVR
    				             setTimeout(() => {
           			          openAllPlacements();
-                			    setTimeout(highlightPlacementCVR, 1000);
+                			    setTimeout(highlightPlacementCVR, 10000);
             				   }, 1500);
                     } else {
                         alert('CVR Max input field not found');
