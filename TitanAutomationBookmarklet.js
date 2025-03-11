@@ -78,8 +78,14 @@
                         console.log('Set CVR Max:', v);
                         clickFilterButton();
                         
-                        // Wait for campaigns to update, then open placements
-                				setTimeout(openAllPlacements, 1500);
+                        // Show Overlay with Titan Suggestions
+				                setTimeout(showTitanSuggestionsOverlay, 500);
+                        
+                        // Wait for campaigns to update, then open placements and highlight CVR
+   				             setTimeout(() => {
+          			          openAllPlacements();
+                			    setTimeout(highlightPlacementCVR, 1000);
+            				   }, 1500);
                     } else {
                         alert('CVR Max input field not found');
                     }
@@ -229,6 +235,111 @@
         console.error('Error opening placement sections:', error);
     }
 }
+
+function highlightPlacementCVR() {
+    try {
+        let campaignRows = document.querySelectorAll('.dataTable tr[class^="js-campaign-"]');
+
+        campaignRows.forEach(row => {
+            let avgCvrCell = row.querySelector('.col-cvr');
+            if (!avgCvrCell) return;
+
+            let avgCvrText = avgCvrCell.textContent.trim().replace('%', '');
+            let avgCvr = parseFloat(avgCvrText);
+
+            let placementRows = row.nextElementSibling?.querySelectorAll('.dataTable tr'); // Placement rows
+
+            if (placementRows) {
+                let cvrValues = [];
+
+                // Collect all Placement CVRs
+                placementRows.forEach(placement => {
+                    let cvrCell = placement.querySelector('.col-cvr');
+                    if (cvrCell) {
+                        let trendSpan = cvrCell.querySelector('.trend-previous'); // Ignore this
+                        let cvrText = trendSpan ? trendSpan.nextSibling.textContent.trim() : cvrCell.textContent.trim();
+                        let cvr = parseFloat(cvrText.replace('%', ''));
+                        cvrValues.push({ cell: cvrCell, value: cvr });
+                    }
+                });
+
+                // Sort placements by CVR (ascending order)
+                // cvrValues.sort((a, b) => a.value - b.value);
+
+                // Apply colors based on CVR ranking
+                cvrValues.forEach((item, index) => {
+                    if (item.value > avgCvr) {
+                        item.cell.style.backgroundColor = "#abfca9"; // Green (Above AVG)
+                    } else {
+                        if (index === 0) item.cell.style.backgroundColor = "#ffb8b8"; // Red (Lowest CVR)
+                        else if (index === 1) item.cell.style.backgroundColor = "#ffc67d"; // Orange (2nd Lowest)
+                        else item.cell.style.backgroundColor = "#fff47d"; // Yellow (3rd Lowest)
+                    }
+                });
+            }
+        });
+    } catch (error) {
+        console.error('Error highlighting Placement CVR:', error);
+    }
+}
+
+function showTitanSuggestionsOverlay() {
+    // Remove any existing overlay
+    let existingOverlay = document.getElementById('titan-suggestions-overlay');
+    if (existingOverlay) existingOverlay.remove();
+
+    let overlay = document.createElement('div');
+    overlay.id = 'titan-suggestions-overlay';
+    overlay.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0, 0, 0, 0.8);z-index:9999;color:white;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;font-family:Arial,sans-serif;";
+
+    let title = document.createElement('h2');
+    title.textContent = "Titan Suggestions";
+    title.style = "margin-bottom:10px;";
+    overlay.appendChild(title);
+
+    let bulletPoints = document.createElement('ul');
+    bulletPoints.style = "text-align:left;list-style-type:square;";
+    ["Placeholder for suggestion 1", "Placeholder for suggestion 2", "Placeholder for suggestion 3"].forEach(text => {
+        let li = document.createElement('li');
+        li.textContent = text;
+        bulletPoints.appendChild(li);
+    });
+    overlay.appendChild(bulletPoints);
+
+    // Legend for Colors
+    let legend = document.createElement('div');
+    legend.style = "margin-top:20px;padding:10px;background:white;color:black;border-radius:5px;";
+
+    let legendTitle = document.createElement('strong');
+    legendTitle.textContent = "Placement CVR Legend:";
+    legend.appendChild(legendTitle);
+
+    let legendColors = [
+        { color: "#abfca9", text: "Above Average (Green)" },
+        { color: "#fff47d", text: "Below AVG - Highest (Yellow)" },
+        { color: "#ffc67d", text: "Below AVG - Medium (Orange)" },
+        { color: "#ffb8b8", text: "Lowest CVR (Red)" }
+    ];
+
+    legendColors.forEach(({ color, text }) => {
+        let div = document.createElement('div');
+        div.style = `margin-top:5px;padding:5px;background:${color};border-radius:3px;color:black;text-align:center;`;
+        div.textContent = text;
+        legend.appendChild(div);
+    });
+
+    overlay.appendChild(legend);
+
+    // Close Button
+    let closeButton = document.createElement('button');
+    closeButton.textContent = "Close";
+    closeButton.style = "margin-top:20px;padding:10px;background:red;color:white;border:none;border-radius:5px;cursor:pointer;";
+    closeButton.onclick = () => overlay.remove();
+    overlay.appendChild(closeButton);
+
+    document.body.appendChild(overlay);
+}
+
 
 
         function b(t, c){
