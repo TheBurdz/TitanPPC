@@ -14,8 +14,8 @@
 	p.appendChild(logo);
 
         let t = document.createElement('div');
-        t.textContent = 'Amazon PPC Filters';
-        t.style = "font-weight:bold;margin-top:10px;margin-bottom:10px;";
+        t.textContent = 'Amazon PPC Suggested Actions';
+        t.style = "font-size:12px;font-weight:bold;margin-top:10px;margin-bottom:10px;";
         p.appendChild(t);
 
         // Create Campaign Filters dropdown
@@ -77,6 +77,9 @@
                         i.value = v;
                         console.log('Set CVR Max:', v);
                         clickFilterButton();
+                        
+                        // Wait for campaigns to update, then open placements
+                				setTimeout(openAllPlacements, 1500);
                     } else {
                         alert('CVR Max input field not found');
                     }
@@ -204,6 +207,29 @@
                 alert('Filter form button not found.');
             }
         }
+        
+        function openAllPlacements() {
+    try {
+        let campaignRows = document.querySelectorAll('.dataTable tr[class^="js-campaign-"]');
+
+        if (campaignRows.length === 0) {
+            console.log("No campaigns found in filtered results.");
+            return;
+        }
+
+        campaignRows.forEach(row => {
+            let placementButton = row.querySelector('.col-placement .btn-campaign-placements-show');
+            if (placementButton) {
+                placementButton.click();
+                console.log(`Opened placements for: ${row.className}`);
+            }
+        });
+
+    } catch (error) {
+        console.error('Error opening placement sections:', error);
+    }
+}
+
 
         function b(t, c){
             let btn = document.createElement('button');
