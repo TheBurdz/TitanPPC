@@ -1,15 +1,21 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // Allow Chrome Extension to communicate
+app.use(cors());
 
-// OpenAI API Key (Store securely, never expose in frontend)
-const OPENAI_API_KEY = "your-openai-api-key"; 
+// Load API key from .env file
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-// API Route to process PPC data
+// 🔹 Test Route for Browsers (Check if Server is Live)
+app.get('/', (req, res) => {
+    res.send("AI PPC Backend is Live!");
+});
+
+// 🔹 API Route to Analyze PPC Data
 app.post('/analyze-ppc', async (req, res) => {
     try {
         const ppcData = req.body;  // Receive data from the Chrome Extension
@@ -17,7 +23,7 @@ app.post('/analyze-ppc', async (req, res) => {
         const openAIResponse = await axios.post(
             'https://api.openai.com/v1/chat/completions',
             {
-                model: "gpt-4-turbo",  // Use your Custom GPT Model
+                model: "gpt-4-turbo",
                 messages: [
                     { role: "system", content: "You are an expert Amazon PPC strategist." },
                     { role: "user", content: `Analyze this PPC campaign data and provide insights: ${JSON.stringify(ppcData)}` }
@@ -39,6 +45,6 @@ app.post('/analyze-ppc', async (req, res) => {
     }
 });
 
-// Start Server
-const PORT = process.env.PORT || 5000;
+// 🔹 Use Render’s Dynamic Port
+const PORT = process.env.PORT || 10000; // Fallback to 10000
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
