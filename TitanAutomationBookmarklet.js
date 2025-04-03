@@ -94,49 +94,53 @@
         }
 
         function setAcosMaxValue(){
-            ensureFilterFormOpen(() => {
-                clearAllInputs();
-                try {
-                    let i = document.querySelector('input[name="acos[max]"]');
-                    if (i) {
-                        i.value = 15;
-                        console.log('Set ACoS Max: 15');
-                        clickFilterButton();
-                    } else {
-                        alert('ACoS Max input field not found');
-                    }
-                } catch(e) {
-                    alert('Error setting ACoS Max: ' + e);
-                }
-            });
+    ensureFilterFormOpen(() => {
+        clearAllInputs();
+        try {
+            let i = document.querySelector('input[name="acos[max]"]');
+            if (i) {
+                i.value = 15;
+                console.log('Set ACoS Max: 15');
+                clickFilterButton();
+                setTimeout(openAllPlacements, 1500);
+            } else {
+                alert('ACoS Max input field not found');
+            }
+        } catch(e) {
+            alert('Error setting ACoS Max: ' + e);
         }
+    });
+}
+
 
 	function setAcosMaxOrdersValue(){
-            ensureFilterFormOpen(() => {
-                clearAllInputs();
-                try {
-                    let i = document.querySelector('input[name="orders[max]"]');
-                    if (i) {
-                        i.value = 20;
-                        console.log('Set Orders Max: 20');
-                        clickFilterButton();
-                    } else {
-                        alert('Orders Max input field not found');
-                    }
-                } catch(e) {
-                    alert('Error setting Orders Max: ' + e);
-                }
-            });
+    ensureFilterFormOpen(() => {
+        clearAllInputs();
+        try {
+            let i = document.querySelector('input[name="orders[max]"]');
+            if (i) {
+                i.value = 20;
+                console.log('Set Orders Max: 20');
+                clickFilterButton();
+                setTimeout(openAllPlacements, 1500);
+            } else {
+                alert('Orders Max input field not found');
+            }
+        } catch(e) {
+            alert('Error setting Orders Max: ' + e);
         }
+    });
+}
+
 
 	// New Clicks No Orders Function    
 	function setClicksNoOrdersValue(){
-    	ensureFilterFormOpen(() => {
+    ensureFilterFormOpen(() => {
         clearAllInputs();
         try {
             let valuesToSet = {
-                "orders[max]": 0,  // Set Orders Max to 0
-                "clicks[min]": 1   // Set Clicks Min to 1
+                "orders[max]": 0,
+                "clicks[min]": 1
             };
 
             Object.keys(valuesToSet).forEach(fieldName => {
@@ -149,50 +153,55 @@
                 }
             });
 
-            clickFilterButton(); // Apply filters after setting values
+            clickFilterButton();
+            setTimeout(openAllPlacements, 1500);
 
         } catch(e) {
             alert('Error setting multiple values: ' + e);
         }
-    	});
-	}
+    });
+}
+
 
 
         function setAcosMinValue(){
-            ensureFilterFormOpen(() => {
-                clearAllInputs();
-                try {
-                    let i=document.querySelector('input[name="acos[min]"]');
-                    if (i) {
-                        i.value = 35;
-                        console.log('Set ACoS Min: 35');
-                        clickFilterButton();
-                    } else {
-                        alert('ACoS Min input field not found');
-                    }
-                } catch(e) {
-                    alert('Error setting ACoS Min: '+e);
-                }
-            });
+    ensureFilterFormOpen(() => {
+        clearAllInputs();
+        try {
+            let i = document.querySelector('input[name="acos[min]"]');
+            if (i) {
+                i.value = 35;
+                console.log('Set ACoS Min: 35');
+                clickFilterButton();
+                setTimeout(openAllPlacements, 1500);
+            } else {
+                alert('ACoS Min input field not found');
+            }
+        } catch(e) {
+            alert('Error setting ACoS Min: ' + e);
         }
+    });
+}
 
 	function setAcosMin70Value(){
-            ensureFilterFormOpen(() => {
-                clearAllInputs();
-                try {
-                    let i=document.querySelector('input[name="acos[min]"]');
-                    if (i) {
-                        i.value = 70;
-                        console.log('Set ACoS Min: 70');
-                        clickFilterButton();
-                    } else {
-                        alert('ACoS Min input field not found');
-                    }
-                } catch(e) {
-                    alert('Error setting ACoS Min: '+e);
-                }
-            });
+    ensureFilterFormOpen(() => {
+        clearAllInputs();
+        try {
+            let i = document.querySelector('input[name="acos[min]"]');
+            if (i) {
+                i.value = 70;
+                console.log('Set ACoS Min: 70');
+                clickFilterButton();
+                setTimeout(openAllPlacements, 1500);
+            } else {
+                alert('ACoS Min input field not found');
+            }
+        } catch(e) {
+            alert('Error setting ACoS Min: ' + e);
         }
+    });
+}
+
 
         function clickFilterButton(){
             let filterButton = document.querySelector('.js-table-filter-submit');
